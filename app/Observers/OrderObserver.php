@@ -2,44 +2,47 @@
 
 namespace App\Observers;
 
-use App\Events\OrderStatusChanged;
 use App\Models\Order;
-use Illuminate\Support\Facades\Cache;
 
 class OrderObserver
 {
+    /**
+     * Handle the Order "created" event.
+     */
     public function created(Order $order): void
     {
-        $this->clearUserCache($order->user_id);
+        //
     }
 
+    /**
+     * Handle the Order "updated" event.
+     */
     public function updated(Order $order): void
     {
-        if ($order->isDirty('status')) {
-            event(new OrderStatusChanged(
-                $order,
-                $order->getOriginal('status'),
-                $order->status
-            ));
-        }
-
-        $this->clearUserCache($order->user_id);
-        $this->clearOrderCache($order->id);
+        //
     }
 
+    /**
+     * Handle the Order "deleted" event.
+     */
     public function deleted(Order $order): void
     {
-        $this->clearUserCache($order->user_id);
-        $this->clearOrderCache($order->id);
+        //
     }
 
-    protected function clearUserCache(int $userId): void
+    /**
+     * Handle the Order "restored" event.
+     */
+    public function restored(Order $order): void
     {
-        Cache::tags(["user.{$userId}.orders"])->flush();
+        //
     }
 
-    protected function clearOrderCache(int $orderId): void
+    /**
+     * Handle the Order "force deleted" event.
+     */
+    public function forceDeleted(Order $order): void
     {
-        Cache::forget("order.{$orderId}");
+        //
     }
 }
